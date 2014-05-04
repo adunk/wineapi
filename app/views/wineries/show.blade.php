@@ -1,0 +1,1 @@
+/Users/adunkle1/Sites/wineapi/app/views/wineries/show.blade.php
