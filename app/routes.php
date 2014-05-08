@@ -11,26 +11,28 @@
 |
 */
 
-Route::get('/', function()
-{
-	return View::make('hello');
-});
+/**
+ * Homepage Route
+ */
+Route::get('/', ['as' => 'home', 'uses' => 'PagesController@index']);
 
 /**
  * Users routes
  */
-Route::resource('users', 'UsersController');
+Route::resource('users', 'UsersController', ['only' => ['index', 'show', 'edit', 'update', 'destroy']]);
 
+/**
+ * Registration routes
+ */
+Route::get('/register', 'RegistrationController@create')->before('guest');
+Route::post('/register', ['as' => 'registration.store', 'uses' => 'RegistrationController@store']);
 
 /**
  * Sessions routes
- *
- * TODO Setup user authentication.
- *
  */
-//Route::get('login', 'SessionsController@create'); // Login alias route
-//Route::get('logout', 'SessionsController@destroy'); // Logout alias route
-//Route::resource('sessions', 'SessionsController', ['only' => ['create', 'store', 'destroy']]); // Sessions resource routes
+Route::get('/login', ['as' => 'login', 'uses' => 'SessionsController@create']);
+Route::get('/logout', ['as' => 'logout', 'uses' => 'SessionsController@destroy']);
+Route::resource('sessions', 'SessionsController', ['only' => ['create', 'store', 'destroy']]);
 
 /**
  * Route group for API versioning

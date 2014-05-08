@@ -51,6 +51,16 @@ App::error(function(Exception $exception, $code)
 	Log::error($exception);
 });
 
+/**
+ * This listens for form validation errors.
+ *
+ * @link https://laracasts.com/lessons/from-install-to-registration-part-2
+ */
+App::error(function(Laracasts\Validation\FormValidationException $exception, $code)
+{
+  return Redirect::back()->withInput()->withErrors($exception->getErrors());
+});
+
 /*
 |--------------------------------------------------------------------------
 | Maintenance Mode Handler
