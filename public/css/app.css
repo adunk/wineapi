@@ -1,0 +1,18 @@
+/** Custom CSS styles for WineAPI **/
+
+html {
+  height: 100%;
+}
+
+body {
+  height: 100%;
+  margin: 0;
+  padding: 1%;
+  padding-top: 50px;
+}
+
+main,
+main .layout,
+#map-canvas {
+  height: 100%;
+}
