@@ -9,7 +9,15 @@ class WineriesController extends \BaseController {
 	 */
 	public function index()
 	{
-		return 'Return all wineries';
+	  $wineries = Winery::all();
+    
+    return Response::json(
+      array(
+        'error' => false,
+        'wineries' => $wineries->toArray(),
+      ),
+      200
+    );
 	}
 
 	/**
