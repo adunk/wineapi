@@ -20,27 +20,7 @@ class UsersController extends \BaseController {
 	 */
 	public function index()
 	{
-		return 'Show all users';
-	}
-
-	/**
-	 * Show the form for creating a new resource.
-	 *
-	 * @return Response
-	 */
-	public function create()
-	{
-		return 'Show form to create a new user';
-	}
-
-	/**
-	 * Store a newly created resource in storage.
-	 *
-	 * @return Response
-	 */
-	public function store()
-	{
-		return 'Save a new user to the databse';
+    return 'Show all users';
 	}
 
 	/**

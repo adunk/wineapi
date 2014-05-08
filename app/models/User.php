@@ -17,7 +17,14 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 	 *
 	 * @var array
 	 */
-	protected $hidden = array('password');
+	protected $hidden = ['password'];
+	
+  /**
+   * Add to the "fillable" array
+   *
+   * @var array
+   */
+  protected $fillable = ['name', 'email', 'password'];
 
 	/**
 	 * Get the unique identifier for the user.
@@ -78,6 +85,14 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 	public function getReminderEmail()
 	{
 		return $this->email;
+	}
+	
+	/**
+	 * This function ensures that all passwords are hashed before being saved to the database
+	 */
+	public function setPasswordAttribute($password)
+	{
+  	$this->attributes['password'] = Hash::make($password);
 	}
 
 }
