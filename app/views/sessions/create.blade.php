@@ -6,6 +6,7 @@
   <h1>Log In</h1>
   
   {{ Form::open(['route' => 'sessions.store']) }}
+  
     <!-- Email Field -->
     <div class="form-group">
       {{ Form::label('email', 'Email:') }}
@@ -30,5 +31,6 @@
         <p>{{ Session::get('flash_message') }}</p>
       </div>
     @endif
+    
   {{ Form::close() }}
 @stop

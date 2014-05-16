@@ -17,6 +17,7 @@
           <li class="{{ set_active('register') }}"><a href="/register">Register</a></li>
           <li class="{{ set_active('login') }}"><a href="/login">Login</a></li>
         @else
+          <li>{{ link_to_profle() }}</li>
           <li><a href="/logout">Logout</a></li>
         @endif
       </ul>
