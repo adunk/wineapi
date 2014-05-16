@@ -1,25 +1,38 @@
 <?php
 
-class WinesController extends \BaseController {
+use Wineapi\Transformers\WineTransformer;
+
+class WinesController extends ApiController {
+  
+  /**
+   * @var Wineapi\Transformers\WineTransformer
+   */
+  protected $wineTransformer;
+  
+  /**
+   * Inject the $wineTransformer as a dependency
+   */
+  public function __construct(\Wineapi\Transformers\WineTransformer $wineTransformer)
+  {
+    $this->wineTransformer = $wineTransformer;
+    
+    // Basic authentication on POST requests
+    $this->beforeFilter('auth.basic', ['on' => 'post']);
+  }
 
 	/**
 	 * Display a listing of the resource.
 	 *
+	 * @param $wineryId NULL
 	 * @return Response
 	 */
-	public function index()
+	public function index($wineryId = NULL)
 	{
-		return 'Return all wines';
-	}
-
-	/**
-	 * Show the form for creating a new resource.
-	 *
-	 * @return Response
-	 */
-	public function create()
-	{
-		return 'Show form to create a new wine';
+		$wines = $this->getWines($wineryId);
+		
+    return $this->respond([
+      'data' => $this->wineTransformer->transformCollection($wines->all()),
+    ]);
 	}
 
 	/**
@@ -44,17 +57,6 @@ class WinesController extends \BaseController {
 	}
 
 	/**
-	 * Show the form for editing the specified resource.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function edit($id)
-	{
-		return 'Show form to edit a wine with ID of ' . $id;
-	}
-
-	/**
 	 * Update the specified resource in storage.
 	 *
 	 * @param  int  $id
@@ -74,6 +76,17 @@ class WinesController extends \BaseController {
 	public function destroy($id)
 	{
 		return 'Delete a wine in the database with ID of ' . $id;
+	}
+	
+	/**
+	 * Helper function to get wines by winery id (if set)
+	 *
+	 * @param $wineryId int
+	 * @returns @wines array
+	 */
+	protected function getWines($wineryId)
+	{
+  	return $wineryId ? Winery::findOrFail($wineryId)->wines : Wine::all();
 	}
 
 }

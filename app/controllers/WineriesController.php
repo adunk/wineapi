@@ -1,6 +1,24 @@
 <?php
 
-class WineriesController extends \BaseController {
+use Wineapi\Transformers\WineryTransformer;
+
+class WineriesController extends ApiController {
+  
+  /**
+   * @var Wineapi\Transformers\WineryTransformer
+   */
+  protected $wineryTransformer;
+  
+  /**
+   * Inject the $wineryTransformer as a dependency
+   */
+  public function __construct(\Wineapi\Transformers\WineryTransformer $wineryTransformer)
+  {
+    $this->wineryTransformer = $wineryTransformer;
+    
+    // Basic authentication on POST requests
+    $this->beforeFilter('auth.basic', ['on' => 'post']);
+  }
 
 	/**
 	 * Display a listing of the resource.
@@ -9,25 +27,12 @@ class WineriesController extends \BaseController {
 	 */
 	public function index()
 	{
-	  $wineries = Winery::all();
-    
-    return Response::json(
-      array(
-        'error' => false,
-        'wineries' => $wineries->toArray(),
-      ),
-      200
-    );
-	}
-
-	/**
-	 * Show the form for creating a new resource.
-	 *
-	 * @return Response
-	 */
-	public function create()
-	{
-		return 'Show form to create a new winery';
+	  $limit = Input::get('limit', 5);
+	  $wineries = Winery::paginate($limit);
+	  
+	  return $this->respondWithPagination($wineries, [
+	    'data' => $this->wineryTransformer->transformCollection($wineries->all()),
+	  ]);
 	}
 
 	/**
@@ -37,7 +42,18 @@ class WineriesController extends \BaseController {
 	 */
 	public function store()
 	{
-		return 'Save a new winery to the database';
+	  // We assume that if 'name' or 'body was not provided basic validation has failed
+	  if (! Input::get('name'))
+	  {
+	    return $this->respondFailedValidation('Invalid request. Winery name not provided.');
+	  }
+	  
+	  // Create a new winery with the provided fields
+	  Winery::create(Input::all());
+	  
+	  // Return a successful response code
+	  return $this->respondCreated('New winery successfully created.');
+	  
 	}
 
 	/**
@@ -48,18 +64,18 @@ class WineriesController extends \BaseController {
 	 */
 	public function show($id)
 	{
-		return 'Return a specific winery with ID of ' . $id;
-	}
-
-	/**
-	 * Show the form for editing the specified resource.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function edit($id)
-	{
-		return 'Show form to edit a winery with ID of ' . $id;
+	  // Query database for Winery ID
+		$winery = Winery::find($id);
+		
+		// Response if winery not found
+		if (!$winery) {
+		  return $this->respondNotFound('Winery does not exist.');
+		}
+		
+		// Response if query successful
+		return $this->respond([
+		  'data' => $this->wineryTransformer->transform($winery),
+		]);
 	}
 
 	/**
