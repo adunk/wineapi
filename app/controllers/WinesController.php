@@ -1,6 +1,7 @@
 <?php
 
 use Wineapi\Transformers\WineTransformer;
+use Wineapi\Repositories\WineRepository;
 
 class WinesController extends ApiController {
   
@@ -10,11 +11,18 @@ class WinesController extends ApiController {
   protected $wineTransformer;
   
   /**
-   * Inject the $wineTransformer as a dependency
+   * @var Wineapi\Repositories\DbWinesRepository
    */
-  public function __construct(\Wineapi\Transformers\WineTransformer $wineTransformer)
+  protected $wine;
+  
+  /**
+   * Inject $wineTransformer and $wines as a dependencies
+   */
+  public function __construct(WineTransformer $wineTransformer, WineRepository $wine)
   {
     $this->wineTransformer = $wineTransformer;
+    
+    $this->wine = $wine;
     
     // Basic authentication on POST requests
     $this->beforeFilter('auth.basic', ['on' => 'post']);
@@ -28,7 +36,7 @@ class WinesController extends ApiController {
 	 */
 	public function index($wineryId = NULL)
 	{
-		$wines = $this->getWines($wineryId);
+		$wines = $this->wine->getAll($wineryId);
 		
     return $this->respond([
       'data' => $this->wineTransformer->transformCollection($wines->all()),
@@ -51,9 +59,14 @@ class WinesController extends ApiController {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function show($id)
+	public function show($wineryId)
 	{
-		return 'Return a specific wine with ID of ' . $id;
+	  $wine = $this->wine->find($wineryId);
+	  
+		// Response if query successful
+		return $this->respond([
+		  'data' => $this->wineTransformer->transform($wine),
+		]);
 	}
 
 	/**
@@ -76,17 +89,6 @@ class WinesController extends ApiController {
 	public function destroy($id)
 	{
 		return 'Delete a wine in the database with ID of ' . $id;
-	}
-	
-	/**
-	 * Helper function to get wines by winery id (if set)
-	 *
-	 * @param $wineryId int
-	 * @returns @wines array
-	 */
-	protected function getWines($wineryId)
-	{
-  	return $wineryId ? Winery::findOrFail($wineryId)->wines : Wine::all();
 	}
 
 }
