@@ -11,36 +11,32 @@
 |
 */
 
-/**
- * Homepage Route
- */
+# Homepage Route
 Route::get('/', ['as' => 'home', 'uses' => 'PagesController@index']);
 
-/**
- * Users routes
- */
+# User routes
 Route::resource('users', 'UsersController', ['only' => ['index', 'show', 'edit', 'update', 'destroy']]);
 
-/**
- * Registration routes
- */
+# Registration routes
 Route::get('/register', 'RegistrationController@create')->before('guest');
 Route::post('/register', ['as' => 'registration.store', 'uses' => 'RegistrationController@store']);
 
-/**
- * Sessions routes
- */
+# Profile routes
+Route::resource('profiles', 'ProfilesController', ['only' => ['show', 'edit', 'update']]);
+
+# Session routes
 Route::get('/login', ['as' => 'login', 'uses' => 'SessionsController@create']);
 Route::get('/logout', ['as' => 'logout', 'uses' => 'SessionsController@destroy']);
 Route::resource('sessions', 'SessionsController', ['only' => ['create', 'store', 'destroy']]);
 
-/**
- * Route group for API versioning
- */
+# Route group for API versioning
 Route::group(array('prefix' => 'api/v1'), function() {
-  // Winery Routes
-  Route::resource('wineries', 'WineriesController');
+  # Wines by Winery
+  Route::get('wineries/{id}/wines', 'WinesController@index');
   
-  // Wine Routes
-  Route::resource('wines', 'WinesController');
+  # Winery Routes
+  Route::resource('wineries', 'WineriesController', ['only' => ['index', 'store', 'show', 'update', 'destroy']]);
+  
+  # Wine Routes
+  Route::resource('wines', 'WinesController', ['only' => ['index', 'store', 'show', 'update', 'destroy']]);
 });

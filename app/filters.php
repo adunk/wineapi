@@ -78,3 +78,22 @@ Route::filter('csrf', function()
 		throw new Illuminate\Session\TokenMismatchException;
 	}
 });
+
+/**
+ * This basically makes sure that the currently logged in user has permissions to view/edit the route
+ */
+Route::filter('currentUser', function($route)
+{
+  if (Auth::guest()) return Redirect::home();
+  
+  if (Auth::user()->id != $route->parameter('profiles'))
+  {
+    return Redirect::home();
+  }
+});
+
+
+
+
+
+

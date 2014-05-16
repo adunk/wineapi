@@ -61,6 +61,17 @@ App::error(function(Laracasts\Validation\FormValidationException $exception, $co
   return Redirect::back()->withInput()->withErrors($exception->getErrors());
 });
 
+/**
+ * This listens for errors when a database model is not fount
+ *
+ * @link https://laracasts.com/series/incremental-api-development/episodes/9
+ * @returns JSON 404 response
+ */
+App::error(function(Illuminate\Database\Eloquent\ModelNotFoundException $exception)
+{
+  return Response::json(['error' => ['message' => 'Resource not found.']], 404);
+});
+
 /*
 |--------------------------------------------------------------------------
 | Maintenance Mode Handler

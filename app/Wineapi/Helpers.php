@@ -18,5 +18,14 @@ function set_active($path, $active = 'active') {
  * @param $errors object. Contains returned error messages
  */
 function errors_for($attribute, $errors) {
-  $errors->first($attribute, '<span class="text-danger">:message</span>'); 
+  return $errors->first($attribute, '<span class="text-danger">:message</span>');
+}
+
+/**
+ * Helper function to link to a user's profile
+ *
+ * @param $text sting
+ */
+function link_to_profle($text = 'Profile') {
+  return link_to_route('profiles.show', $text, Auth::user()->id);
 }
