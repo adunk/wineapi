@@ -1,6 +1,7 @@
 <?php
 
 use Wineapi\Forms\RegistrationForm;
+use Wineapi\Mailers\UserMailer as Mailer;
 
 class RegistrationController extends \BaseController {
 
@@ -8,15 +9,22 @@ class RegistrationController extends \BaseController {
    * @var RegistrationForm
    */
 	private $registrationForm;
-
+	
+	/**
+	 * @var Mailer
+	 */
+  private $mailer;
+  
 	/**
 	 * A $registraionForm object is a required dependency that holds our validation logic
 	 * 
 	 * @param RegistrationForm $registrationForm
 	 */
-	function __construct(RegistrationForm $registrationForm)
+	function __construct(RegistrationForm $registrationForm, Mailer $mailer)
 	{
 		$this->registrationForm = $registrationForm;
+		
+		$this->mailer = $mailer;
 	}
 
 	/**
@@ -44,6 +52,10 @@ class RegistrationController extends \BaseController {
 	  
 	  # Create a new user
     $user = User::create($input);
+    
+    # Send a welcome email
+    # TODO: Should probably refactor to use event handler instead.
+    $this->mailer->welcome($user);
 		
 		# Log user into the system immediately
 		Auth::login($user);

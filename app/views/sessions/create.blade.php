@@ -10,7 +10,7 @@
     <!-- Email Field -->
     <div class="form-group">
       {{ Form::label('email', 'Email:') }}
-      {{ Form::text('email', null, ['class' => 'form-control']) }}
+      {{ Form::email('email', null, ['class' => 'form-control']) }}
       {{ errors_for('email', $errors) }}
     </div>
   
@@ -21,16 +21,10 @@
       {{ errors_for('password', $errors) }}
     </div>
     
-    <!-- Log In! Field -->
+    <!-- Form Submit -->
     <div class="form-group">
       {{ Form::submit('Log In!', ['class' => 'btn btn-primary']) }}
     </div>
-  
-    @if (Session::has('flash_message'))
-      <div class="form-group">
-        <p>{{ Session::get('flash_message') }}</p>
-      </div>
-    @endif
     
   {{ Form::close() }}
 @stop

@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * @watch https://laracasts.com/lessons/auth-essentials
+ */
+
 use Wineapi\Forms\LoginForm;
 
 class SessionsController extends \BaseController {
@@ -7,7 +11,7 @@ class SessionsController extends \BaseController {
   /**
    * @var LoginForm
    */
-	private $_loginForm;
+	private $loginForm;
 
 	/**
 	 * A $loginForm object is a required dependency that holds our validation logic
@@ -16,7 +20,7 @@ class SessionsController extends \BaseController {
 	 */
 	function __construct(LoginForm $loginForm)
 	{
-		$this->_loginForm = $loginForm;
+		$this->loginForm = $loginForm;
 	}
 
 	/**
@@ -36,11 +40,11 @@ class SessionsController extends \BaseController {
 	 */
 	public function store()
 	{
-		$this->_loginForm->validate($input = Input::only('email', 'password'));
+	  # Validate input
+		$this->loginForm->validate($input = Input::only('email', 'password'));
 		
-		if (Auth::attempt($input)) {
-  	  return Redirect::intended('/');	
-		}
+		# Attemp to login a user in
+		if (Auth::attempt($input)) return Redirect::intended('/')->with('flash_message', 'You have been logged in.');
 		
 		return Redirect::back()->withInput()->withFlashMessage('Invalid login credentials.');
 	}
@@ -51,11 +55,10 @@ class SessionsController extends \BaseController {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function destroy($id = NULL)
+	public function destroy()
 	{
 		Auth::logout();
 		
-		return Redirect::home();
+		return Redirect::home()->with('flash_message', 'You have been logged out.');
 	}
-
 }
