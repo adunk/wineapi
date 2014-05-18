@@ -32,6 +32,9 @@ Route::group(['before' => 'csrf'], function() {
   Route::get('/logout', ['as' => 'logout', 'uses' => 'SessionsController@destroy']);
   Route::resource('sessions', 'SessionsController', ['only' => ['create', 'store', 'destroy']]);
   
+  # Password routes
+  Route::controller('password', 'RemindersController');
+  
 });
 
 # Route group for API versioning

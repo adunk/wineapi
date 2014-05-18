@@ -16,6 +16,7 @@
         @if (Auth::guest())
           <li class="{{ set_active('register') }}"><a href="/register">Register</a></li>
           <li class="{{ set_active('login') }}"><a href="/login">Login</a></li>
+          <li class="{{ set_active('password/remind') }}"><a href="/password/remind">Reset</a></li>
         @else
           <li>{{ link_to_profle() }}</li>
           <li><a href="/logout">Logout</a></li>
