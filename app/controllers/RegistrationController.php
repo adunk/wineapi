@@ -7,7 +7,7 @@ class RegistrationController extends \BaseController {
   /**
    * @var RegistrationForm
    */
-	private $_registrationForm;
+	private $registrationForm;
 
 	/**
 	 * A $registraionForm object is a required dependency that holds our validation logic
@@ -16,7 +16,7 @@ class RegistrationController extends \BaseController {
 	 */
 	function __construct(RegistrationForm $registrationForm)
 	{
-		$this->_registrationForm = $registrationForm;
+		$this->registrationForm = $registrationForm;
 	}
 
 	/**
@@ -36,12 +36,16 @@ class RegistrationController extends \BaseController {
 	 */
 	public function store()
 	{
+	  # Grab input
 	  $input = Input::only('name', 'email', 'password', 'password_confirmation');
 	  
-	  $this->_registrationForm->validate($input);
+	  # Validate
+	  $this->registrationForm->validate($input);
 	  
+	  # Create a new user
     $user = User::create($input);
 		
+		# Log user into the system immediately
 		Auth::login($user);
 		
 		return Redirect::home();

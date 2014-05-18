@@ -27,5 +27,5 @@ function errors_for($attribute, $errors) {
  * @param $text sting
  */
 function link_to_profle($text = 'Profile') {
-  return link_to_route('profiles.show', $text, Auth::user()->id);
+  return link_to_route('profiles.show', $text, Auth::id());
 }

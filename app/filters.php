@@ -73,10 +73,13 @@ Route::filter('guest', function()
 
 Route::filter('csrf', function()
 {
-	if (Session::token() != Input::get('_token'))
-	{
-		throw new Illuminate\Session\TokenMismatchException;
-	}
+  if ($_SERVER['REQUEST_METHOD'] === 'POST' || $_SERVER['REQUEST_METHOD'] === 'PUT' || $_SERVER['REQUEST_METHOD'] === 'DELETE')
+  {
+    if (Session::token() != Input::get('_token'))
+    {
+		  throw new Illuminate\Session\TokenMismatchException;
+    }
+  }
 });
 
 /**
@@ -91,9 +94,3 @@ Route::filter('currentUser', function($route)
     return Redirect::home();
   }
 });
-
-
-
-
-
-

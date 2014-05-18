@@ -88,7 +88,7 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 	}
 	
 	/**
-	 * This function ensures that all passwords are hashed before being saved to the database
+	 * Ensures that all passwords are hashed before being saved to the database
 	 */
 	public function setPasswordAttribute($password)
 	{
@@ -96,7 +96,7 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 	}
 	
 	/**
-	 * TODO
+	 * Establish a user relationship with a profile
 	 */
 	public function profile()
 	{
@@ -104,13 +104,18 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 	}
 	
 	/**
+	 * Helper function to determine if a currently logged in user matches a given $user object
 	 *
+	 * @returns boolean
 	 */
   public function isCurrent()
   {
-    if (Auth::guest()) return false;
-    
-    return Auth::user()->id = $this->id;
+    if (Auth::id() != $this->id || Auth::guest()) {
+      return FALSE;
+    } else
+    {
+      return TRUE;
+    }
   }
-
+  
 }
